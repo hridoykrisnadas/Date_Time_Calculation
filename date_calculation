@@ -1,0 +1,44 @@
+ public static String dateCalculation(String clientTime, String staticTime) {
+        Date date = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd H:mm:ss");
+        Date dateObj = null;
+        Date checkDate = null;
+
+        try {
+            dateObj = sdf.parse(clientTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
+        String checkInDate = dateFormat.format(dateObj).toString();
+        Date defaultTime = null;
+        try {
+            defaultTime = dateFormat.parse(staticTime);
+            checkDate = dateFormat.parse(checkInDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+        try {
+            if (dateFormat.parse(dateFormat.format(date)).after(defaultTime)) {
+                long diff = checkDate.getTime() - defaultTime.getTime();
+                Log.e("Difference", "onBindViewHolder: Difference: " + dateObj + " : " + defaultTime + " : " + diff);
+                if (diff>0){
+                    long diffSeconds = diff / 1000 % 60;
+                    long diffMinutes = diff / (60 * 1000) % 60;
+                    long diffHours = diff / (60 * 60 * 1000);
+
+                    return "Late: " + diffHours + " Hour, " + diffMinutes + " Minutes, " + diffSeconds + " Sec";
+                } else {
+                    return "0";
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+        return "0";
+    }
